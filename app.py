@@ -52,13 +52,13 @@ def post(post_id):
     return render_template('post.html', post=post)
 
 @app.route('/title/<title>')
-def book_by_title(title):
+def books_by_title(title):
     post = get_title(title)
     return render_template('post.html', post=post)
 
 
 @app.route('/user/<email>')
-def book_by_user(email):
+def books_by_user(email):
     post = get_renter(email)
     return render_template('post.html', post=post)
 
