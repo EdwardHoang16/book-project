@@ -18,6 +18,24 @@ def get_post(post_bookID):
         abort(404)
     return post
 
+def get_title(title):
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM books WHERE title  = ?',
+                         (title,)).fetchone()
+    conn.close()
+    if post is None:
+        abort(404)
+    return post
+
+def get_renter(email):
+    conn = get_db_connection()
+    post = conn.execute('SELECT * FROM books WHERE renter  = ?',
+                         (email,)).fetchone()
+    conn.close()
+    if post is None:
+        abort(404)
+    return post
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
@@ -33,6 +51,16 @@ def post(post_id):
     post = get_post(str(post_id))
     return render_template('post.html', post=post)
 
+@app.route('/title/<title>')
+def book_by_title(title):
+    post = get_title(title)
+    return render_template('post.html', post=post)
+
+
+@app.route('/user/<email>')
+def book_by_user(email):
+    post = get_renter(email)
+    return render_template('post.html', post=post)
 
 
 
