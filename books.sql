@@ -12,5 +12,14 @@ CREATE TABLE books (
     ratings_count TEXT,
     text_reviews_count TEXT,
     publication_date TEXT,
-    publisher TEXT
+    publisher TEXT,
+    renter TEXT
+);
+
+
+DROP TABLE IF EXISTS credentials;
+
+CREATE TABLE credentials (
+    email TEXT PRIMARY KEY,
+    password TEXT
 );
