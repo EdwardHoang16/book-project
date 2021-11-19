@@ -22,6 +22,7 @@ ratings_count = []
 text_reviews_count = []
 publication_date = []
 publisher = []
+renter = []
 j = 0
 with open(filePath, "r") as a_file:
     for line in a_file:
@@ -55,11 +56,13 @@ with open(filePath, "r") as a_file:
             elif i == 11:
                 publisher.append(s[:len(s) - 1])
             i = i + 1
+        renter.append("")
 
 df = pd.DataFrame(
         {'bookID': bookID, 'title': title, 'authors': authors, 'average_rating': average_rating, 'isbn': isbn,
          'isbn13': isbn13, 'language_code': language_code, 'num_pages': num_pages, 'ratings_count': ratings_count,
-         'text_reviews_count': text_reviews_count, 'publication_date': publication_date, 'publisher': publisher})
+         'text_reviews_count': text_reviews_count, 'publication_date': publication_date, 'publisher': publisher,
+        'renter': renter})
 
 df.to_sql('books', connection, if_exists='append', index=False)
 connection.commit()
