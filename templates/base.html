@@ -22,11 +22,14 @@
                   <a class="nav-link" href="#">About</a>
               </li>
               <li class="nav-item">
-                {% if not userLoggedIn %}
+                {% if get_email() %}
+                  <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                {% elif not get_email() %}
                   <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                {% else %}
-                  <a class="nav-link" href="#">Account</a>
                 {% endif %}
+              </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('search') }}">Search</a>
               </li>
             </ul>
         </div>

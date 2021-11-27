@@ -24,7 +24,7 @@ publication_date = []
 publisher = []
 renter = []
 j = 0
-with open(filePath, "r") as a_file:
+with open(filePath, "r", encoding='UTF8') as a_file:
     for line in a_file:
         if j == 0:
             j = j + 1

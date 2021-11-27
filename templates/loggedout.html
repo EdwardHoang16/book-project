@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} Logged Out! {% endblock %}</h2>
+    Made a mistake? <a href="{{ url_for('login') }}">Login</a>
+{% endblock %}

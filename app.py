@@ -64,6 +64,10 @@ def get_email():
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
+@app.context_processor
+def get_login():
+    return dict(get_email=get_email)
+
 @app.route('/')
 def index():
     posts = get_all_posts()
@@ -108,16 +112,21 @@ def login():
     if not get_email():
         return render_template('login.html')
     else:
-        posts = get_all_posts()
-        return render_template('index.html', posts=posts)
+        return render_template('loggedin.html')
+        #posts = get_all_posts()
+        #return render_template('index.html', posts=posts)
+
 
 # delete cookie holding user's email info and return them to index
 @app.route('/logout')
 def logout():
-    posts = get_all_posts()
-    resp = make_response(render_template('index.html', posts=posts))
+    resp = make_response(render_template('loggedout.html'))
     flask.Response.delete_cookie(resp, key='email')
     return resp
+
+@app.route('/search')
+def search():
+    return render_template('search.html')
 
 # check if credentials match against db
 # if credentials match, set cookie (with 1 hour timeout) on user's side which contains email
