@@ -63,6 +63,13 @@ def index():
     conn.close()
     return render_template('index.html', posts=posts, userLoggedIn=userLoggedIn)
 
+@app.route('/<email>')
+def index(email):
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM books').fetchall()
+    conn.close()
+    return render_template('index.html', posts=posts, userLoggedIn=userLoggedIn)
+
 @app.route('/login')
 def login():
     return render_template('login.html')
@@ -81,8 +88,18 @@ def book_by_title(title):
     post = get_title(title)
     return render_template('post.html', post=post)
 
+@app.route('/email/<int:post_id>')
+def post(email,post_id):
+    post = get_post(str(post_id))
+    return render_template('post.html', post=post)
 
-@app.route('/usersBooks/<email>')
+@app.route('/email/<title>')
+def book_by_title(email,title):
+    post = get_title(title)
+    return render_template('post.html', post=post)
+
+
+@app.route('/<email>/usersBooks')
 def book_by_user(email):
     post = get_renter(email)
     return render_template('post.html', post=post)
