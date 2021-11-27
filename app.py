@@ -71,5 +71,13 @@ def books_by_user(email):
     post = get_renter(email)
     return render_template('post.html', post=post)
 
+def update_renter(email,title):
+    task = (email,title)
+    conn = get_db_connection()
+    post = conn.execute('UPDATE books SET renter = ? WHERE title = ?',task)
+    conn.commit()
+    conn.close()
+    return "Book Renter Updated"
+
 
 
