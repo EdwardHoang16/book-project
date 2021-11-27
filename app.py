@@ -80,4 +80,8 @@ def update_renter(email,title):
     return "Book Renter Updated"
 
 
-
+def is_book_rented(title):
+    post = get_title(title)
+    if len(post['renter'])==0:
+        return False
+    return True
