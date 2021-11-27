@@ -37,6 +37,22 @@ def get_renter(email):
         abort(404)
     return post
 
+def update_renter(email,title):
+    task = (email,title)
+    conn = get_db_connection()
+    post = conn.execute('UPDATE books SET renter = ? WHERE title = ?',task)
+    conn.commit()
+    conn.close()
+    return "Book Renter Updated"
+
+
+def is_book_rented(title):
+    post = get_title(title)
+    if len(post['renter'])==0:
+        return False
+    return True
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
@@ -60,28 +76,25 @@ def post(post_id):
     post = get_post(str(post_id))
     return render_template('post.html', post=post)
 
-@app.route('/title/<title>')
-def books_by_title(title):
+@app.route('/<title>')
+def book_by_title(title):
     post = get_title(title)
     return render_template('post.html', post=post)
 
 
-@app.route('/user/<email>')
-def books_by_user(email):
+@app.route('/usersBooks/<email>')
+def book_by_user(email):
     post = get_renter(email)
     return render_template('post.html', post=post)
 
-def update_renter(email,title):
-    task = (email,title)
-    conn = get_db_connection()
-    post = conn.execute('UPDATE books SET renter = ? WHERE title = ?',task)
-    conn.commit()
-    conn.close()
-    return "Book Renter Updated"
 
+@app.route('/<email>/rentABook/<title>', methods=('GET', 'POST'))
+def rent_a_book(email,title):
+    if request.method == 'POST':
+        if is_book_rented(title):
+            flash('Book Is Rented!')
+        else:
+            update_renter(email,title)
+            return redirect(url_for('index'))
 
-def is_book_rented(title):
-    post = get_title(title)
-    if len(post['renter'])==0:
-        return False
-    return True
+    return book_by_title(title)
