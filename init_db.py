@@ -9,7 +9,6 @@ with open('books.sql') as f:
 cur = connection.cursor()
 
 
-# filePath = "/Users/ayushmaheshwari/sjsu/cs122/book-project/books.csv"
 filePath = "./books.csv"
 bookID = []
 title = []
