@@ -36,6 +36,21 @@ def get_renter(email):
         abort(404)
     return post
 
+def update_renter(email,title):
+    task = (email,title)
+    conn = get_db_connection()
+    post = conn.execute('UPDATE books SET renter = ? WHERE title = ?',task)
+    conn.commit()
+    conn.close()
+    return "Book Renter Updated"
+
+
+def is_book_rented(title):
+    post = get_title(title)
+    if len(post['renter'])==0:
+        return False
+    return True
+
 def get_all_posts():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books').fetchall()
@@ -59,16 +74,28 @@ def post(post_id):
     post = get_post(str(post_id))
     return render_template('post.html', post=post)
 
-@app.route('/title/<title>')
-def books_by_title(title):
+@app.route('/<title>')
+def book_by_title(title):
     post = get_title(title)
     return render_template('post.html', post=post)
 
-
-@app.route('/user/<email>')
-def books_by_user(email):
+@app.route('/usersBooks')
+def book_by_user():
+    email = get_email()
     post = get_renter(email)
     return render_template('post.html', post=post)
+
+@app.route('/rentABook/<title>', methods=['GET', 'POST'])
+def rent_a_book(title):
+    email = get_email()
+    if request.method == 'POST':
+        if is_book_rented(title):
+            flash('Book Is Rented!')
+        else:
+            update_renter(email,title)
+            return redirect(url_for('index'))
+
+    return book_by_title(title)
 
 ### Authentication ###
 @app.route('/signup')
