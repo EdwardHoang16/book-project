@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 from werkzeug.exceptions import abort
 
+userLoggedIn = False
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -44,7 +45,15 @@ def index():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books').fetchall()
     conn.close()
-    return render_template('index.html', posts=posts)
+    return render_template('index.html', posts=posts, userLoggedIn=userLoggedIn)
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/signup')
+def signup():
+    return render_template('signup.html')
 
 @app.route('/<int:post_id>')
 def post(post_id):
