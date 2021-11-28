@@ -118,10 +118,8 @@ def search_a_book_by_title():
     email = get_email()
     if request.method == 'POST':
         title = request.form['title']
-        print("The Title is: " + title)
         post = get_title(title)
         id = int(post['bookID'])
-        print("The ID is: " + str(post['bookID']))
         post = get_post(str(id))
         return render_template('post.html', post=post)
     return render_template('search.html')
@@ -131,7 +129,6 @@ def search_a_book_by_author():
     email = get_email()
     if request.method == 'POST':
         author = request.form['author']
-        print(author)
         posts = get_books_by_author(author)
         return render_template('index.html', posts=posts)
     return render_template('search.html')
