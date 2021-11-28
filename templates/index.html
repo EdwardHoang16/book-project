@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1>{% block title %} Books Ratings {% endblock %}</h1>
+
    {% for post in posts %}
     <a href="{{ url_for('post', post_id=post['bookID']) }}">
         <h2>{{ post['title'] }}</h2>
