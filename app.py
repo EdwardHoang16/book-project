@@ -20,8 +20,8 @@ def get_post(post_bookID):
 
 def get_title(title):
     conn = get_db_connection()
-    post = conn.execute('SELECT * FROM books WHERE title  = ?',
-                         (title,)).fetchone()
+    post = conn.execute('SELECT * FROM books WHERE title LIKE ?',
+                         ('%' + title + '%',)).fetchall()
     conn.close()
     if post is None:
         abort(404)
@@ -59,7 +59,7 @@ def get_all_posts():
 
 def get_books_by_author(author):
     conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM books WHERE authors = ?',(author,)).fetchall()
+    posts = conn.execute('SELECT * FROM books WHERE authors LIKE ?',('%' + author + '%',)).fetchall()
     conn.close()
     return posts
 
@@ -92,8 +92,8 @@ def post(post_id):
 
 @app.route('/<title>')
 def book_by_title(title):
-    post = get_title(title)
-    return render_template('post.html', post=post)
+    posts = get_title(title)
+    return render_template('index.html', posts=posts)
 
 @app.route('/books_renting')
 def books_by_user():
@@ -119,10 +119,8 @@ def search_a_book_by_title():
     if request.method == 'POST':
         if request.form.get('title'):
             title = request.form['title']
-            post = get_title(title)
-            id = int(post['bookID'])
-            post = get_post(str(id))
-            return render_template('post.html', post=post)
+            posts = get_title(title)
+            return render_template('index.html', posts=posts)
         if request.form.get('author'):
             author = request.form['author']
             posts = get_books_by_author(str(author))

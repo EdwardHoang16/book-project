@@ -3,6 +3,14 @@
 {% block content %}
     <h2>{% block title %} {{ post['title'] }} {% endblock %}</h2>
     <span class="badge badge-primary">{{ post['isbn'] }}</span>
-    <p>{{ post['publisher'] }}</p>
+    <br />
+    <br />
+
+    <p><strong>Author(s):</strong> {{ post['authors'] }}</p>
+    <p><strong>Publisher:</strong> {{ post['publisher'] }}</p>
+    <p><strong>Number of Pages:</strong> {{ post['num_pages'] }}</p>
+    <p><strong>Language:</strong> {{ post['language_code'] }}</p>
+    <p><strong>Rating:</strong> {{ post['average_rating'] }} ({{ post['ratings_count'] }} ratings) </p>
+
     <button>Rent this book</button>
 {% endblock %}
