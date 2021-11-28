@@ -101,6 +101,19 @@ def rent_a_book(title):
 
     return book_by_title(title)
 
+@app.route('/search', methods=['GET', 'POST'])
+def search_a_book_by_title():
+    email = get_email()
+    if request.method == 'POST':
+        title = request.form['title']
+        print("The Title is: " + title)
+        post = get_title(title)
+        id = int(post['bookID'])
+        print("The ID is: " + str(post['bookID']))
+        post = get_post(str(id))
+        return render_template('post.html', post=post)
+    return render_template('search.html')
+
 ### Authentication ###
 @app.route('/signup')
 def signup():
