@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Books Ratings {% endblock %}</h1>
+    <h1>{% block title %} Library {% endblock %}</h1>
 
    {% for post in posts %}
     <a href="{{ url_for('post', post_id=post['bookID']) }}">
