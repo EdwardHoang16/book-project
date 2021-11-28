@@ -27,14 +27,14 @@ def get_title(title):
         abort(404)
     return post
 
-def get_renter(email):
+def get_renters_books(email):
     conn = get_db_connection()
-    post = conn.execute('SELECT * FROM books WHERE renter  = ?',
-                         (email,)).fetchone()
+    posts = conn.execute('SELECT * FROM books WHERE renter  = ?',
+                         (email,)).fetchall()
     conn.close()
     if post is None:
         abort(404)
-    return post
+    return posts
 
 def update_renter(email,title):
     task = (email,title)
@@ -96,10 +96,10 @@ def book_by_title(title):
     return render_template('post.html', post=post)
 
 @app.route('/usersBooks')
-def book_by_user():
+def books_by_user():
     email = get_email()
-    post = get_renter(email)
-    return render_template('post.html', post=post)
+    posts = get_renters_books(email)
+    return render_template('index.html', posts=posts)
 
 @app.route('/rentABook/<title>', methods=['GET', 'POST'])
 def rent_a_book(title):
