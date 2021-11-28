@@ -46,7 +46,7 @@ def update_renter(email,title):
 
 
 def is_book_rented(title):
-    post = get_title(title)
+    post = get_book_record_by_title(title)
     if len(post['renter'])==0:
         return False
     return True
@@ -92,7 +92,7 @@ def post(post_id):
 
 @app.route('/<title>')
 def book_by_title(title):
-    posts = get_title(title)
+    posts = get_book_record_by_title(title)
     return render_template('index.html', posts=posts)
 
 @app.route('/books_renting')
