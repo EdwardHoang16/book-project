@@ -13,6 +13,9 @@
     <p><strong>Rating:</strong> {{ post['average_rating'] }} ({{ post['ratings_count'] }} ratings) </p>
 
     {% if get_email() %}
-        <button>Rent this book</button>
+        <!-- <button>Rent this book</button> -->
+        <form action="/rent_book/{{post['isbn']}}" method="POST">
+            <input type="submit" value="Rent this book" />
+        </form>
     {% endif %}
 {% endblock %}
