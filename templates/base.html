@@ -18,18 +18,22 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                  <a class="nav-link" href="#">About</a>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('search') }}">Search</a>
               </li>
+              
+              {% if get_email() %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('books_renting') }}">Books Renting</a>
+                </li>
+              {% endif %}
+
               <li class="nav-item">
                 {% if get_email() %}
                   <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
                 {% elif not get_email() %}
                   <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                 {% endif %}
-              </li>
-              <li>
-                <a class="nav-link" href="{{ url_for('search') }}">Search</a>
               </li>
             </ul>
         </div>

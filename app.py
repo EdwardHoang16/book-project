@@ -145,9 +145,8 @@ def login():
     if not get_email():
         return render_template('login.html')
     else:
-        return render_template('loggedin.html')
-        #posts = get_all_posts()
-        #return render_template('index.html', posts=posts)
+        posts = get_all_posts()
+        return render_template('index.html', posts=posts)
 
 
 # delete cookie holding user's email info and return them to index
@@ -160,6 +159,12 @@ def logout():
 @app.route('/search')
 def search():
     return render_template('search.html')
+
+@app.route('/booksRenting')
+def books_renting():
+    email = get_email()
+    posts = get_renters_books(email)
+    return render_template('books_renting.html', posts=posts)
 
 # check if credentials match against db
 # if credentials match, set cookie (with 1 hour timeout) on user's side which contains email
