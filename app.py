@@ -136,6 +136,14 @@ def search_a_book_by_author():
         return render_template('index.html', posts=posts)
     return render_template('search.html')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search_a_book_by_language():
+    email = get_email()
+    if request.method == 'POST':
+        language = request.form['language']
+        posts = get_books_by_language(str(language))
+        return render_template('index.html', posts=posts)
+    return render_template('search.html')
 
 ### Authentication ###
 @app.route('/signup')
