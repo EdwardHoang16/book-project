@@ -57,6 +57,18 @@ def get_all_posts():
     conn.close()
     return posts
 
+def get_books_by_author(author):
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM books WHERE authors = ?',(author,)).fetchall()
+    conn.close()
+    return posts
+
+def get_books_by_language(language):
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM books WHERE language_code = ?',(language,)).fetchall()
+    conn.close()
+    return posts
+
 def get_email():
     email = request.cookies.get('email')
     return email
@@ -113,6 +125,17 @@ def search_a_book_by_title():
         post = get_post(str(id))
         return render_template('post.html', post=post)
     return render_template('search.html')
+
+@app.route('/search', methods=['GET', 'POST'])
+def search_a_book_by_author():
+    email = get_email()
+    if request.method == 'POST':
+        author = request.form['author']
+        print(author)
+        posts = get_books_by_author(author)
+        return render_template('index.html', posts=posts)
+    return render_template('search.html')
+
 
 ### Authentication ###
 @app.route('/signup')
