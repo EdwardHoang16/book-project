@@ -36,18 +36,17 @@ def get_renters_books(email):
         abort(404)
     return posts
 
-def update_renter(email,title):
-    task = (email,title)
+def update_renter(email, isbn):
     conn = get_db_connection()
-    post = conn.execute('UPDATE books SET renter = ? WHERE title = ?',task)
+    conn.execute(f"UPDATE books SET renter = '{email}' WHERE isbn = '{isbn}'")
     conn.commit()
     conn.close()
     return "Book Renter Updated"
 
 
-def is_book_rented(title):
-    post = get_book_record_by_title(title)
-    if len(post['renter'])==0:
+def is_book_rented(isbn):
+    post = get_book_by_isbn(isbn)
+    if len(post[0]['renter'])==0:
         return False
     return True
 
@@ -69,9 +68,20 @@ def get_books_by_language(language):
     conn.close()
     return posts
 
+def get_book_by_isbn(isbn):
+    conn = get_db_connection()
+    post = conn.execute(f"SELECT * FROM books WHERE isbn = '{isbn}'").fetchall()
+    print(post)
+    conn.close()
+    return post
+
 def get_email():
     email = request.cookies.get('email')
     return email
+
+# def owns_books():
+#     email = get_email()
+#     if 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
@@ -101,21 +111,22 @@ def books_by_user():
     posts = get_renters_books(email)
     return render_template('index.html', posts=posts)
 
-@app.route('/rentABook/<title>', methods=['GET', 'POST'])
-def rent_a_book(title):
+@app.route('/rent_book/<isbn>', methods=['GET', 'POST'])
+def rent_a_book(isbn):
     email = get_email()
     if request.method == 'POST':
-        if is_book_rented(title):
+        if is_book_rented(isbn):
             flash('Book Is Rented!')
+            return render_template('index.html', posts=get_all_posts())
         else:
-            update_renter(email,title)
-            return redirect(url_for('index'))
-
-    return book_by_title(title)
+            update_renter(email, isbn)
+            posts = get_renters_books(email)
+            return render_template('index.html', posts=posts)
+    else:
+        return render_template('index.html', posts=get_book_by_isbn(isbn))
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_a_book():
-    email = get_email()
     if request.method == 'POST':
         if request.form.get('title'):
             title = request.form['title']
@@ -190,7 +201,6 @@ def authenticate():
 def new_user():
     email = request.form['email']
     password = request.form['password']
-    print(email, password)
 
     conn = get_db_connection()
     user = conn.execute(f"SELECT * FROM credentials WHERE email = '{email}'").fetchall()
