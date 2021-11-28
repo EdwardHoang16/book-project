@@ -117,29 +117,21 @@ def rent_a_book(title):
 def search_a_book_by_title():
     email = get_email()
     if request.method == 'POST':
-        title = request.form['title']
-        post = get_title(title)
-        id = int(post['bookID'])
-        post = get_post(str(id))
-        return render_template('post.html', post=post)
-    return render_template('search.html')
-
-@app.route('/search', methods=['GET', 'POST'])
-def search_a_book_by_author():
-    email = get_email()
-    if request.method == 'POST':
-        author = request.form['author']
-        posts = get_books_by_author(author)
-        return render_template('index.html', posts=posts)
-    return render_template('search.html')
-
-@app.route('/search', methods=['GET', 'POST'])
-def search_a_book_by_language():
-    email = get_email()
-    if request.method == 'POST':
-        language = request.form['language']
-        posts = get_books_by_language(str(language))
-        return render_template('index.html', posts=posts)
+        if request.form.get('title'):
+            title = request.form['title']
+            post = get_title(title)
+            id = int(post['bookID'])
+            post = get_post(str(id))
+            return render_template('post.html', post=post)
+        if request.form.get('author'):
+            author = request.form['author']
+            posts = get_books_by_author(str(author))
+            return render_template('index.html', posts=posts)
+        if request.form.get('language'):
+            language = request.form['language']
+            posts = get_books_by_language(str(language))
+            return render_template('index.html', posts=posts)
+        flash('Enter one of the Fields')
     return render_template('search.html')
 
 ### Authentication ###
