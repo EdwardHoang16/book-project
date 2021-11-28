@@ -95,7 +95,7 @@ def book_by_title(title):
     post = get_title(title)
     return render_template('post.html', post=post)
 
-@app.route('/usersBooks')
+@app.route('/books_renting')
 def books_by_user():
     email = get_email()
     posts = get_renters_books(email)
