@@ -114,7 +114,7 @@ def rent_a_book(title):
     return book_by_title(title)
 
 @app.route('/search', methods=['GET', 'POST'])
-def search_a_book_by_title():
+def search_a_book():
     email = get_email()
     if request.method == 'POST':
         if request.form.get('title'):
