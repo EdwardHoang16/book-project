@@ -12,5 +12,7 @@
     <p><strong>Language:</strong> {{ post['language_code'] }}</p>
     <p><strong>Rating:</strong> {{ post['average_rating'] }} ({{ post['ratings_count'] }} ratings) </p>
 
-    <button>Rent this book</button>
+    {% if get_email() %}
+        <button>Rent this book</button>
+    {% endif %}
 {% endblock %}
