@@ -117,16 +117,16 @@ def rent_a_book(isbn):
     if request.method == 'POST':
         if is_book_rented(isbn):
             flash('Book Is Rented!')
+            return render_template('index.html', posts=get_all_posts())
         else:
             update_renter(email, isbn)
             posts = get_renters_books(email)
             return render_template('index.html', posts=posts)
-
-    return book_by_title(title)
+    else:
+        return render_template('index.html', posts=get_book_by_isbn(isbn))
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_a_book():
-    email = get_email()
     if request.method == 'POST':
         if request.form.get('title'):
             title = request.form['title']
