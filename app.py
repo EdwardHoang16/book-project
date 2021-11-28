@@ -18,7 +18,7 @@ def get_post(post_bookID):
         abort(404)
     return post
 
-def get_title(title):
+def get_book_record_by_title(title):
     conn = get_db_connection()
     post = conn.execute('SELECT * FROM books WHERE title LIKE ?',
                          ('%' + title + '%',)).fetchall()
