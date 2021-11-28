@@ -119,7 +119,7 @@ def search_a_book():
     if request.method == 'POST':
         if request.form.get('title'):
             title = request.form['title']
-            posts = get_title(title)
+            posts = get_book_record_by_title(title)
             return render_template('index.html', posts=posts)
         if request.form.get('author'):
             author = request.form['author']
