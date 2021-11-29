@@ -101,26 +101,31 @@ app.config['SECRET_KEY'] = '123'
 def get_login():
     return dict(get_email=get_email, rentable=rentable, owns_book=owns_book)
 
+#post all book records on our home page
 @app.route('/')
 def index():
     posts = get_all_posts()
     return render_template('index.html', posts=posts)
 
+#post a book record by ID
 @app.route('/<int:post_id>')
 def post(post_id):
     post = get_post(str(post_id))
     return render_template('post.html', post=post)
 
+#post all book records by title
 @app.route('/<title>')
 def book_by_title(title):
     posts = get_book_record_by_title(title)
     return render_template('index.html', posts=posts)
 
+#post all books a user is renting
 @app.route('/booksRenting')
 def books_by_user():
     email = get_email()
     posts = get_renters_books(email)
     return render_template('index.html', posts=posts)
+
 
 @app.route('/rent_book/<isbn>', methods=['GET', 'POST'])
 def rent_a_book(isbn):
@@ -143,6 +148,7 @@ def return_book(isbn):
     posts = get_renters_books(email)
     return render_template('index.html', posts=posts)
 
+#Search for a book in the search page
 @app.route('/search', methods=['GET', 'POST'])
 def search_a_book():
     if request.method == 'POST':
