@@ -12,8 +12,11 @@
     <p><strong>Language:</strong> {{ post['language_code'] }}</p>
     <p><strong>Rating:</strong> {{ post['average_rating'] }} ({{ post['ratings_count'] }} ratings) </p>
 
-    {% if get_email() %}
-        <!-- <button>Rent this book</button> -->
+    {% if owns_book(post['isbn']) %}
+        <form action="/return_book/{{post['isbn']}}" method="POST">
+            <input type="submit" value="Return" />
+        </form>
+    {% elif rentable(post['isbn']) %}
         <form action="/rent_book/{{post['isbn']}}" method="POST">
             <input type="submit" value="Rent this book" />
         </form>

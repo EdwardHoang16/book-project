@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 from flask.helpers import make_response
 from werkzeug.exceptions import abort
+from jinja2 import Environment
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
@@ -45,8 +46,8 @@ def update_renter(email, isbn):
 
 
 def is_book_rented(isbn):
-    post = get_book_by_isbn(isbn)
-    if len(post[0]['renter'])==0:
+    book = get_book_by_isbn(isbn)
+    if len(book[0]['renter'])==0:
         return False
     return True
 
@@ -71,7 +72,6 @@ def get_books_by_language(language):
 def get_book_by_isbn(isbn):
     conn = get_db_connection()
     post = conn.execute(f"SELECT * FROM books WHERE isbn = '{isbn}'").fetchall()
-    print(post)
     conn.close()
     return post
 
@@ -79,16 +79,19 @@ def get_email():
     email = request.cookies.get('email')
     return email
 
-# def owns_books():
-#     email = get_email()
-#     if 
+def rentable(isbn):
+    email = get_email()
+    return not email is None and not is_book_rented(isbn)
+
+def owns_book(isbn):
+    return get_email() == get_book_by_isbn(isbn)[0]['renter']
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
 @app.context_processor
 def get_login():
-    return dict(get_email=get_email)
+    return dict(get_email=get_email, rentable=rentable, owns_book=owns_book)
 
 @app.route('/')
 def index():
@@ -124,6 +127,13 @@ def rent_a_book(isbn):
             return render_template('index.html', posts=posts)
     else:
         return render_template('index.html', posts=get_book_by_isbn(isbn))
+
+@app.route('/return_book/<isbn>', methods=['POST'])
+def return_book(isbn):
+    update_renter('', isbn)
+    email = get_email()
+    posts = get_renters_books(email)
+    return render_template('index.html', posts=posts)
 
 @app.route('/search', methods=['GET', 'POST'])
 def search_a_book():
