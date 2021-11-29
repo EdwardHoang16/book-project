@@ -1,9 +1,12 @@
+# This file handles the logic and routes of the application.
+
 import flask
 from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 from flask.helpers import make_response
 from werkzeug.exceptions import abort
 
+#Gets a database connection to database.db.
 def get_db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
@@ -87,16 +90,19 @@ def get_email():
     email = request.cookies.get('email')
     return email
 
+#Checks if a book is able to be rented
 def rentable(isbn):
     email = get_email()
     return not email is None and not is_book_rented(isbn)
 
+#Checks if a user is currently renting a particular book
 def owns_book(isbn):
     return get_email() == get_book_by_isbn(isbn)[0]['renter']
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123'
 
+#Allows get_email, rentable, and owns_book functions to be used in Jinja.
 @app.context_processor
 def get_login():
     return dict(get_email=get_email, rentable=rentable, owns_book=owns_book)
@@ -126,7 +132,7 @@ def books_by_user():
     posts = get_renters_books(email)
     return render_template('index.html', posts=posts)
 
-
+# Handles the renting of a book by a logged-in user
 @app.route('/rent_book/<isbn>', methods=['GET', 'POST'])
 def rent_a_book(isbn):
     email = get_email()
@@ -141,6 +147,7 @@ def rent_a_book(isbn):
     else:
         return render_template('index.html', posts=get_book_by_isbn(isbn))
 
+# Handles the returning of a book by a logged-in user
 @app.route('/return_book/<isbn>', methods=['POST'])
 def return_book(isbn):
     update_renter('', isbn)
@@ -189,10 +196,12 @@ def logout():
     flask.Response.delete_cookie(resp, key='email')
     return resp
 
+# Shows the user the page for searching
 @app.route('/search')
 def search():
     return render_template('search.html')
 
+# Shows the logged-in user the books they are currently renting
 @app.route('/booksRenting')
 def books_renting():
     email = get_email()
