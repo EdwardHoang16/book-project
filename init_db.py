@@ -1,3 +1,5 @@
+#This file will import the dataset and create a DataFrame which will be converted to a SQL table called BOOKS.
+
 import pandas as pd
 import sqlite3
 
