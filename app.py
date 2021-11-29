@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 from flask.helpers import make_response
 from werkzeug.exceptions import abort
-from jinja2 import Environment
 
 def get_db_connection():
     conn = sqlite3.connect('database.db')
