@@ -9,6 +9,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
+#Get a book record by ID.
 def get_post(post_bookID):
     conn = get_db_connection()
     post = conn.execute('SELECT * FROM books WHERE bookID = ?',
@@ -18,6 +19,7 @@ def get_post(post_bookID):
         abort(404)
     return post
 
+#Get a book record by title.
 def get_book_record_by_title(title):
     conn = get_db_connection()
     post = conn.execute('SELECT * FROM books WHERE title LIKE ?',
@@ -27,6 +29,7 @@ def get_book_record_by_title(title):
         abort(404)
     return post
 
+#Get all the book records a user is renting
 def get_renters_books(email):
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books WHERE renter  = ?',
@@ -36,6 +39,7 @@ def get_renters_books(email):
         abort(404)
     return posts
 
+#Update a book record with a new renter
 def update_renter(email, isbn):
     conn = get_db_connection()
     conn.execute(f"UPDATE books SET renter = '{email}' WHERE isbn = '{isbn}'")
@@ -43,37 +47,42 @@ def update_renter(email, isbn):
     conn.close()
     return "Book Renter Updated"
 
-
+#Checks if a book is rented
 def is_book_rented(isbn):
     book = get_book_by_isbn(isbn)
     if len(book[0]['renter'])==0:
         return False
     return True
 
+#Gets all the book records from our database
 def get_all_posts():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books').fetchall()
     conn.close()
     return posts
 
+#Gets all the book records by author
 def get_books_by_author(author):
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books WHERE authors LIKE ?',('%' + author + '%',)).fetchall()
     conn.close()
     return posts
 
+#Gets all the book records by language
 def get_books_by_language(language):
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM books WHERE language_code = ?',(language,)).fetchall()
     conn.close()
     return posts
 
+#Gets all the book records by isbn
 def get_book_by_isbn(isbn):
     conn = get_db_connection()
     post = conn.execute(f"SELECT * FROM books WHERE isbn = '{isbn}'").fetchall()
     conn.close()
     return post
 
+#Gets the user email
 def get_email():
     email = request.cookies.get('email')
     return email
