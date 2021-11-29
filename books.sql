@@ -1,3 +1,7 @@
+/*
+    This file creates the books and credentials tables if they do not already exist.
+*/
+
 DROP TABLE IF EXISTS books;
 
 CREATE TABLE books (
